@@ -6,7 +6,7 @@ The skills for this repository are in `.claude/skills/`. Each skill is a folder 
 
 A change reaches the main branch this way. The user logs the agent in to GitHub through MCP. The agent pushes the change to the user's own copy of this repository on GitHub (a fork) and opens a request for review (a pull request). An admin of this repository reviews the change and accepts it. Do not ask the user for a token.
 
-The `*.ifc` file in this repository is a large text file, and it will change: the file here now is a test file of 76 MB and 1.47 million lines. The login through MCP carries small files only, so a whole `*.ifc` file of that size cannot go up through it. How an edit to the `*.ifc` file goes up is under test. Two facts are measured on the test file: git merges two edits to different single lines of the file by itself, and a save of the file through the software library ifcopenshell, with no edit, changes every line of the file.
+The `*.ifc` files in this repository are large text files, and they will change. The login through MCP carries small files only, so a large `*.ifc` file cannot go up through it whole. How an edit to an `*.ifc` file goes up is under test. Two facts are measured on a test file: git merges two edits to different single lines of the file by itself, and a save of the file through the software library ifcopenshell, with no edit, changes every line of the file.
 
 A third fact was measured on November 25, 2026, on `merced_sr99_lexo_ifc43_preliminary.ifc`, a 13.6 MB file. In Claude Code, an edit of one line with `sed`, pushed with `git push`, went up as a diff of one line (1 insertion, 1 deletion). The pack that git builds for that push measures 984 bytes, not the 13.6 MB of the file.
 
