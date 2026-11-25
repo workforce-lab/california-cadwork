@@ -5,7 +5,7 @@ description: "How elements are turned off in the cadwork BIM Viewer through its 
 
 # IFC Layer, IFC Structure and IFC Type in the cadwork BIM Viewer
 
-v0.2, 24 November 2026
+v0.3, 25 November 2026
 
 The cadwork BIM Viewer has three panels with a light beside each line: IFC Structure, IFC Layer and IFC Type. cadwork's manual calls the lights lamps. A light turns off the elements of its line.
 
@@ -46,7 +46,7 @@ The instructor opened these files in the viewer on 24 November 2026 and turned o
 | Test file, plain IfcPresentationLayerAssignment | IFC4X3_ADD2 | IfcOpenShell | Elements stayed on |
 | Test file, layers on the geometric items | IFC4X3_ADD2 | IfcOpenShell | Elements stayed on |
 | Test file exported by Lexocad's scripting interface | IFC4 | Lexocad | Elements stayed on |
-| `lexocad_ifc43/merced_ifc43_preliminary.ifc` | IFC4X3_ADD2 | Lexocad's IFC 4 export, then IfcOpenShell | Elements stayed on |
+| merced.lxz in IFC 4.3 (preliminary) | IFC4X3_ADD2 | Lexocad's IFC 4 export, then IfcOpenShell | Elements stayed on |
 | `merced_safe_test_IFC4.ifc` | IFC4X3_ADD2 | Lexocad 31's IFC4.3 export | No IFC layer in the file |
 | Test file exported by Lexocad's scripting interface | IFC2X3 | Lexocad | Elements turned off |
 
