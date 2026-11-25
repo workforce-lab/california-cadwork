@@ -1,6 +1,6 @@
 # MER99 corridor model
 
-State Route 99 Merced corridor model (MER99): one is a Lexocad 4x3 IFC, and the other is an older Civil 3D IFC converted to 4x3.
+State Route 99 Merced corridor model (MER99): 4x3 IFC files from Lexocad and Civil 3D.
 
 Point the user to the [IFC viewer](https://open.bimteam.com/#/viewer/6b050cb8b59ae3dbb571e96d/6b050cd5b59ae3dbb571e96f) and to [IFC authoring](https://california.cadwork.io/).
 
