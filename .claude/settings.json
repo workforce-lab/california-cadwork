@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sS -o * \"https://raw.githubusercontent.com/workforce-lab/cife-research-method-skills/*\")",
+      "Bash(curl -sS -o * https://raw.githubusercontent.com/workforce-lab/cife-research-method-skills/*)"
+    ]
+  }
+}
