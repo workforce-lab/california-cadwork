@@ -5,7 +5,7 @@ description: "What K-rail is, its dimensions, where it is used and how it behave
 
 # K-rail
 
-v0.1, 25 November 2026
+v0.2, 25 November 2026
 
 K-rail is the common name for Temporary Railing (Type K) of Caltrans, the California Department of Transportation: precast concrete sections of the New Jersey safety shape, joined end to end by a pin through steel loops. A temporary barrier drawn as a plain box, or a K-rail number given without its source, leaves the user a model and a number that cannot be checked. This skill gives each fact with its source, and the one way this repository models K-rail.
 
@@ -54,14 +54,17 @@ Derived top width: half the base, 12 in, less the run of the lower slope, 10 in 
 Model K-rail as one type with one representative section, and make every section an instance of it. The type then holds the facts once, every section shares its geometry, a change to the type changes every section, and the file stays small.
 
 1. Make an IfcWallType named K-rail, with the predefined type PARAPET and the element type Temporary Railing (Type K). IfcWall with PARAPET is the class that this repository's conversions give a barrier, so K-rail stays with the other barriers in the viewer's IFC Type panel (skill ifc-layer-structure-type).
-2. Give the type one representation map: the New Jersey profile in its x-y plane, with x across, y up and the centre of the base at the origin, extruded 6,045 mm along z.
+2. Give the type one representation map: the New Jersey profile in its x-y plane, with x across, y up and the centre of the base at the origin, extruded 6,045 mm along z. In metres, the profile's eight corners are (±0.305, 0), (±0.305, 0.0762), (±0.1272, 0.3302) and (±0.0764, 0.8128). The profile's area is 0.2545 m², and one section's volume is 1.538 m³, both derived.
 3. Give the type a property set named K-rail, with the facts of the table and a pointer to this skill.
-4. Type each element that holds a line of K-rail by the K-rail type, through IfcRelDefinesByType. Its body is a mapped representation, with one mapped item for each section.
-5. Leave out the pins, the loops, the stake holes, the lifting holes and the scuppers. The model shows where the barrier stands and what space it takes, and these parts change neither.
+4. Declare the type in the project, through IfcRelDeclares, so that the type belongs to the project.
+5. Type each element that holds a line of K-rail by the K-rail type, through IfcRelDefinesByType. Its body is a mapped representation, with one mapped item for each section. Each mapped item's transformation operator puts the section in the element's own coordinates: Axis3 along the chord, Axis1 across it and horizontal, Axis2 = Axis3 × Axis1, and the local origin at the section's start, less the element's placement.
+6. Leave out the pins, the loops, the stake holes, the lifting holes and the scuppers. The model shows where the barrier stands and what space it takes, and these parts change neither.
+
+The script `scripts/lay_k_rail.py` does steps 1 to 5 and the steps of the next section. Run it with `python -I scripts/lay_k_rail.py FILE.ifc --line ID,ID --line ID,ID`, with one `--line` for each line of barrier and the IDs of the elements that hold it. It reads the file with ifcopenshell, edits it as lines, and prints each line's length, its number of sections and how far each end moves. Install ifcopenshell for reading with `pip install ifcopenshell`.
 
 ## Laying sections along a line
 
-1. Take the line: the centre line of the barrier's base, with its grade, from the element's own geometry. Take its z values from the model, not from the plans (skill origin-point-ifc). Join pieces of a line that meet end to end into one line, so that no two sections overlap where the pieces meet.
+1. Take the line: the centre line of the barrier's base, with its grade, from the element's own geometry. Take its z values from the model, not from the plans (skill origin-point-ifc). Join pieces of a line that meet end to end into one line, so that no two sections overlap where the pieces meet. Lexocad exports a barrier as a triangulated surface model, a box swept along the line. Its vertices fall in cross-section stations along the element's long axis, and each station gives a point of the line: the mean of its x and y, and its least z.
 2. Count whole sections: n = 1 + round((L - 6.045 m) / 6.096 m), where L is the length of the line. Centre the run of n sections, (n - 1) * 6.096 m + 6.045 m long, on the line, so that each end of the line moves by 5 ft or less.
 3. Start a section every 6.096 m (20 ft) along the line. Each section is a straight chord, 6,045 mm long, from its start on the line, so the sections follow a curve as chords.
 4. Keep each section's cross direction horizontal and its long direction on its chord, so that the section sits on the grade of the line.
@@ -69,12 +72,16 @@ Model K-rail as one type with one representative section, and make every section
 
 Example: a line 100 m long takes 1 + round((100 - 6.045) / 6.096) = 16 sections. Their run is 15 * 6.096 + 6.045 = 97.49 m long, so each end of the line moves 1.26 m inward.
 
+Example from this repository, measured on 25 November 2026: `merced_sr99_lexo_ifc43_preliminary.ifc` holds four elements named "barrier type K", in two lines. In each line a box 10.56 m long meets a curved run end to end, with a gap of 0.09 m between them. One line is 636.98 m long and takes 104 sections, one in the box #125987 and 103 in the run #92822; each of its ends moves 1.524 m, the most that step 2 allows. The other is 610.42 m long and takes 100 sections, 2 in #287948 and 98 in #288181. The edit replaced 4 lines and added 1,262.
+
 ## Changing an IFC file
 
-- Edit the file as lines: delete, replace and append whole lines. Do not save it through ifcopenshell, which changes every line (AGENTS.md).
+- Edit the file as lines: delete, replace and append whole lines. Do not save it through ifcopenshell, which changes every line (AGENTS.md). Reading the file with ifcopenshell, to find the line and to check the result, changes nothing.
+- To give an element its K-rail body, replace its IfcProductDefinitionShape line so that the line points to the new mapped representation. Leave the old geometry lines in the file, unreferenced: their points can be shared with other elements, so deleting them can break another element.
+- Before adding a line of K-rail, check that no K-rail line already stands on the same edge. Two lines on one edge overlap.
 - Keep each changed element's GlobalId, name, class, floor and property sets.
 - Before handing over the file, check that ifcopenshell.validate finds no errors, that no reference points to a deleted line, that each element's volume equals its number of sections times the volume of one section, and that an end view shows the New Jersey shape and a side view shows the joints.
-- The MCP login carries small files only (AGENTS.md), so give the edited IFC file to the user to upload, or push it with git.
+- Do the edit in Claude Code, which has a clone of the repository and git, and push it with git. A chat on claude.ai cannot carry an IFC file of this size (AGENTS.md, section "Where to do the work").
 
 ## Check before answering
 
