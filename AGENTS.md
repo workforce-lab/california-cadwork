@@ -10,6 +10,17 @@ The `*.ifc` files in this repository are large text files, and they will change.
 
 A third fact was measured on November 25, 2026, on `merced_sr99_lexo_ifc43_preliminary.ifc`, a 13.6 MB file. In Claude Code, an edit of one line with `sed`, pushed with `git push`, went up as a diff of one line (1 insertion, 1 deletion). The pack that git builds for that push measures 984 bytes, not the 13.6 MB of the file.
 
+### Give the agent access before the work
+
+An agent pushes to this repository through the Claude GitHub App, not through the user's own GitHub account. So a user can be an admin of this repository and the agent can still be refused. On November 25, 2026, a push from Claude Code was refused with error 403 and the message "Claude doesn't have GitHub access to workforce-lab/california-cadwork for your organization", while the user's account was an admin of this repository.
+
+Before the work, the agent checks that it can push, with `git push --dry-run origin HEAD:refs/heads/BRANCH`. A dry run sends nothing. If the check is refused, the agent stops, tells the user, and asks the user to give it access with these steps:
+
+1. If the user's GitHub account has no write access to this repository, the user asks for it with the issue form "Request write access", and accepts the invitation that GitHub sends after a repo admin approves it.
+2. The user connects GitHub to Claude, or connects it again, at https://claude.ai/connect-github, and signs in with that GitHub account.
+3. The user gives the Claude GitHub App access to this repository: open https://github.com/apps/claude/installations/select_target, choose workforce-lab, and under "Repository access" choose california-cadwork, or all repositories. Then click Install, or Save if the app is already installed. If the user is not an owner of workforce-lab, GitHub sends the request to an owner, who approves it.
+4. The user tells the agent that access is given, and the agent runs the check again before it starts the work.
+
 ## Where to do the work
 
 Do an edit to an `*.ifc` file in Claude Code. When the work is an edit to an `*.ifc` file and the agent is in a chat on claude.ai, ask the user to open this repository in Claude Code, at https://claude.ai/code, and to start the task there. In Claude Code, read this file and follow the steps below.
