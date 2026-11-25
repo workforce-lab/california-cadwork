@@ -14,4 +14,4 @@ Skills for Claude and ChatGPT are in `.claude/skills/`. Claude Code finds them t
 
 `merced_sr99_lexo_ifc43_preliminary.ifc` is the Lexocad model merced.lxz converted to IFC 4.3 (IFC4X3_ADD2).
 
-The 289 elements in bright magenta have no confirmed IFC 4.3 class yet. Each carries the property set MER99_Conversion, which states the open question.
+The 288 elements in bright magenta have no confirmed IFC 4.3 class yet. Each carries the property set MER99_Conversion, which states the open question.
