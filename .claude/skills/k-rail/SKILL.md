@@ -5,7 +5,7 @@ description: "What K-rail is, its dimensions, where it is used and how it behave
 
 # K-rail
 
-v0.2, 25 November 2026
+v0.3, 25 November 2026
 
 K-rail is the common name for Temporary Railing (Type K) of Caltrans, the California Department of Transportation: precast concrete sections of the New Jersey safety shape, joined end to end by a pin through steel loops. A temporary barrier drawn as a plain box, or a K-rail number given without its source, leaves the user a model and a number that cannot be checked. This skill gives each fact with its source, and the one way this repository models K-rail.
 
@@ -73,6 +73,16 @@ The script `scripts/lay_k_rail.py` does steps 1 to 5 and the steps of the next s
 Example: a line 100 m long takes 1 + round((100 - 6.045) / 6.096) = 16 sections. Their run is 15 * 6.096 + 6.045 = 97.49 m long, so each end of the line moves 1.26 m inward.
 
 Example from this repository, measured on 25 November 2026: `merced_sr99_lexo_ifc43_preliminary.ifc` holds four elements named "barrier type K", in two lines. In each line a box 10.56 m long meets a curved run end to end, with a gap of 0.09 m between them. One line is 636.98 m long and takes 104 sections, one in the box #125987 and 103 in the run #92822; each of its ends moves 1.524 m, the most that step 2 allows. The other is 610.42 m long and takes 100 sections, 2 in #287948 and 98 in #288181. The edit replaced 4 lines and added 1,262.
+
+## The K-rail in merced_sr99_lexo_ifc43_preliminary.ifc
+
+Facts measured on 25 November 2026:
+
+- The K-rail was laid with `python -I scripts/lay_k_rail.py merced_sr99_lexo_ifc43_preliminary.ifc --line 125987,92822 --line 287948,288181`, in pull request #15. A file rebuilt from a new Lexocad export needs the K-rail again: check that the four numbers still name the four elements "barrier type K", then run the same command.
+- The 204 sections have no colour. The name "barrier type K test edit", which pull request #11 gave one element as a test, is gone.
+- The K-rail runs 4 to 7 m either side of the plans' ROUTE99 line, from station 21+31 to 27+55, in building "Retaining Wall 6 and 7 M", storey "Retaining wall".
+- At 109 of the 204 sections, other elements lie over the K-rail's top: elements of building "Mainline SR 99" (G16-02, G03-04, G11-03, G13-01, G39-01, G40-01) and of building "Bridge" (two deck slabs, G03-16), from 21+31 to 22+39 and from 24+48 to 26+75. So when the K-rail does not show in a viewer, look first at those two stretches.
+- No cadwork page found says whether the cadwork BIM Viewer draws mapped representations.
 
 ## Changing an IFC file
 

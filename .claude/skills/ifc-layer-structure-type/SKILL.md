@@ -1,11 +1,11 @@
 ---
 name: ifc-layer-structure-type
-description: "How elements are turned off in the cadwork BIM Viewer through its three panels of lights, IFC Structure, IFC Type and IFC Layer, and what to tell a user whose IFC Layer lights do nothing. Use this skill whenever the user says the layer lights or lamps in the cadwork BIM Viewer do not turn elements off, asks whether that is a bug, or calls a file broken or corrupted because of it; whenever the user wants to turn elements on or off in the viewer; whenever an IFC 4.3 file is made or changed for the viewer, such as a Civil 3D or Lexocad export; and before changing a file's spatial structure, classes or layers for the viewer. Use it even when the user does not name the panels."
+description: "How elements are turned off in the cadwork BIM Viewer through its three panels of lights, IFC Structure, IFC Type and IFC Layer, and what to tell a user whose IFC Layer lights do nothing. Use this skill whenever the user says the layer lights or lamps in the cadwork BIM Viewer do not turn elements off, asks whether that is a bug, or calls a file broken or corrupted because of it; whenever the user wants to turn elements on or off in the viewer; whenever an IFC 4.3 file is made or changed for the viewer, such as a Civil 3D or Lexocad export; before changing a file's spatial structure, classes or layers for the viewer; and whenever an IFC file is to go into Lexocad and back out, imported, edited and exported again. Use it even when the user does not name the panels."
 ---
 
 # IFC Layer, IFC Structure and IFC Type in the cadwork BIM Viewer
 
-v0.3, 25 November 2026
+v0.4, 25 November 2026
 
 The cadwork BIM Viewer has three panels with a light beside each line: IFC Structure, IFC Layer and IFC Type. cadwork's manual calls the lights lamps. A light turns off the elements of its line.
 
@@ -49,6 +49,19 @@ The instructor opened these files in the viewer on 24 November 2026 and turned o
 | merced.lxz in IFC 4.3 (preliminary) | IFC4X3_ADD2 | Lexocad's IFC 4 export, then IfcOpenShell | Elements stayed on |
 | `merced_safe_test_IFC4.ifc` | IFC4X3_ADD2 | Lexocad 31's IFC4.3 export | No IFC layer in the file |
 | Test file exported by Lexocad's scripting interface | IFC2X3 | Lexocad | Elements turned off |
+
+## Lexocad's IFC import and the round trip
+
+The IFC has to make a round trip through Lexocad, or content cannot be added in Lexocad (the instructor, 25 November 2026). Facts found that day:
+
+- Lexocad's API guide, Python/Scripts/08_File_IO/README.md, says that IFC import and export carry only the geometry and part of the data and are not a full round trip. Only the .lxz format carries the whole document.
+- The instructor imported main's `merced_sr99_lexo_ifc43_preliminary.ifc` into a new document in the Lexocad window and exported it with the IFC4.3 option. The import made one SuperBloc: the saved .lxz held one element, an IfcBuildingElementProxy named "IFC:" and the file's name, and none of the file's 2,203 GlobalIds. The export was 6,620 bytes: an empty project, the site "Site" with "Building 1" and "Storey 1", and an empty site and building "Layer 2d". It held no element and no geometry.
+- Lexocad's API has a setting, openIFCWithSuperBloc, and a command that converts a SuperBloc into Lexocad elements, OpenLxCmd.CmdConvertSuperblocToLexocadElements. Run in a hidden Lexocad on that saved .lxz, the command returned False, and the model kept its one SuperBloc.
+- In a hidden Lexocad, an import of the whole file with IFC_Importer did not finish within the time limit of the MCP tool run_cad_script_headless.
+- Lexocad 31's own IFC4.3 export of merced_safe.lxz, `merced_safe_test_IFC4.ifc`, put every element into "Storey 1" of "Building 1". Lexocad writes only the spatial structure that its model holds, so the 13 buildings and 18 storeys of the preliminary file came from the conversion, not from Lexocad.
+- Buildings and storeys made by script, with lx.Building, lx.BuildingStorey and storey.addElement, come out of Lexocad's IFC export with their elements, and a GlobalId set with setGlobalId comes out on its element. This was tested with an IFC4 export.
+- Lexocad's scripting exporter wrote IFC4 for setIfcVersion(4) and IFC2X3 for every other value tried: 5, 43, and 9, which is LxIfcModel.IFC4X3. An IFC 4.3 export goes through the export dialog in the Lexocad window.
+- A file rebuilt from a Lexocad export loses the work done after the export, and that work has to be done again: the IFC 4.3 classes with the MER99_Conversion property sets, the spatial structure, the SR 99 alignment (skill origin-point-ifc), the K-rail (skill k-rail), the tree ec.iv with the hawk Carls_hawks, and the deletion of the 99 square trees of the layer "2009 tree" in merced.lxz (pull request #16).
 
 ## How an agent got confused
 

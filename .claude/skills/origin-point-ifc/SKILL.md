@@ -1,11 +1,11 @@
 ---
 name: origin-point-ifc
-description: "How to read and report an IFC file's origin point and elevations against sea level. Use this skill whenever an agent reads, reports, compares or edits z values, elevations or coordinates in an IFC file, such as merced_sr99_c3d_ifc43_do_not_use.ifc in this repository; whenever the user asks where a file's origin point is, how high a place is above sea level, or why a model's elevations differ from the plans or from a published elevation; and whenever a model comes from Civil 3D. Use it even when the user does not say 'origin point'."
+description: "How to read and report an IFC file's origin point and elevations against sea level, and how the contract plans' ROUTE99 stations tie into the frame of merced_sr99_lexo_ifc43_preliminary.ifc. Use this skill whenever an agent reads, reports, compares or edits z values, elevations or coordinates in an IFC file, such as merced_sr99_c3d_ifc43_do_not_use.ifc in this repository; whenever an agent places an element by a station and offset from the contract plans; whenever the user asks where a file's origin point is, how high a place is above sea level, or why a model's elevations differ from the plans or from a published elevation; and whenever a model comes from Civil 3D. Use it even when the user does not say 'origin point'."
 ---
 
 # Origin point of an IFC file
 
-v0.4, 24 November 2026
+v0.5, 25 November 2026
 
 An agent that mixes up a file's origin point with a site's elevation gives answers that sound exact and are wrong by tens of meters. This skill keeps the two apart.
 
@@ -32,6 +32,17 @@ A modeler can build a model near the origin instead of at its true elevation, an
 - Civil 3D built the model on the origin point: in `MERCED_SR99_solid.ifc` the lowest ground point was at z = 0, the file had no IfcSite, and its IfcBuilding gave zero for both reference elevations.
 - On 24 November 2026 the site was raised by the file's vertical offset from the contract plans, 47.96 m (157.35 ft), so a z value read in the model is a plans elevation. The terrain now runs from about 159 to 177 ft (48 to 54 m). The geometry's own coordinates are still the Civil 3D values; only the site moved.
 - Merced stands about 52 m (171 ft) above sea level (GeoNames; TopoZone, from the USGS Merced topographic map). The offset of 47.96 m is close to that 52 m because Civil 3D built the model on the origin point.
+
+## merced_sr99_lexo_ifc43_preliminary.ifc and the plans' ROUTE99 line
+
+Facts found on 25 November 2026, for placing elements by station in the Lexocad file:
+
+- The Lexocad model has no SR 99 stations and no spline: its road variants' links to a horizontal axis are empty (the instructor, 25 November 2026). The file carries the plans' ROUTE99 line as the IfcAlignment "New SR 99", in building "SR 99 alignment", storey "New SR 99", with 81 IfcReferent stations. Two more IfcAlignment, "Original SR 99 13+95.000 to 18+15.000" and "Original SR 99 27+45.000 to 30+95.000", in storey "Original SR 99", follow the ROUTE99 line where the 1950 mainline of merced_hawk_1.lxz lies on it.
+- In the contract plans, `Contract_Plans_Merced_Rte_99.pdf` (metric), note 6 on sheet L-1 makes the "ROUTE99" line the "99CL1" line. The line runs on a tangent N 65°19'15" W to BC 13+36.036; on curve 1, R 609.596 m, Δ 28°58'21" right, to EC 16+44.287; on a tangent N 36°20'55" W for 562.176 m; on curve 2, R 579.000 m, Δ 48°16'21" left, from 22+06.463 to 26+94.277; then N 84°37'16" W. Bridge 39-0230 runs from BB 19+62.56 to EB 21+33.06 (sheet L-3).
+- RW5 stands on the southbound side, from ROUTE99 14+99.861 to 15+28.520, 16.98 to 16.99 m left, 31.798 m along its own line (sheet R-25, table R-41). RW6 and RW7 are median walls at 4.82 m right and left. RW2 begins at 21+66.75, 17.64 m left, and RW3 at 21+06.00, 17.64 m right (sheet L-3).
+- The tie of the plans' stations into the file's frame takes the rotation from the RW6 and RW7 median piles (the pile midline) and the stations from the begin of RW2: a rotation of -0.69°, with station 13+00 at (1552.8, 83.4) in the file. The piles' residual is 0.59 m, and the begin of RW3 misses by 2.1 m. The file's frame is not the Civil 3D frame shifted: a fit on the columns misses by 3 to 5 m. Derive the tie again if the file is rebuilt. The scripts that made it are not in the repository.
+- In the Civil 3D file, the corridor stations are in feet, such as "70+25.00'", on baseline 99CL1, and the median corridor gives centre-line points only from 21+41 to 29+40 m.
+- The 1950 model, merced_hawk_1.lxz (building "0 1950"), has no mainline between about 18+25 and 27+45.
 
 ## Examples
 
