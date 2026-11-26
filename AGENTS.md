@@ -51,6 +51,14 @@ Claude Code works on a clone of the repository instead. It reads and edits the f
 4. Check with `git diff --stat main` that one file changed, with one insertion and one deletion for each line edited.
 5. Commit, and push the branch with `git push -u origin BRANCH`. Then open a pull request, as the section above says.
 
+## Pushing and merging with the GitHub CLI
+
+- On a computer where git's credential manager holds another GitHub account than the GitHub CLI, gh, push through gh's login: `git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin HEAD:refs/heads/BRANCH`. Run it first with `--dry-run`. Pull requests #15 and #16 went up this way.
+- Open the pull request with `gh pr create --repo workforce-lab/california-cadwork --head BRANCH`.
+- Pull requests #3, #15 and #16 were squash-merged, #3 and #15 with `gh pr merge NUMBER --squash`. Fetch main just before a merge, because main can move while a pull request is open: on 24 November 2026 a pull request conflicted until main was merged into its branch. Merge main into the branch rather than rebase it, because a rebase needs a force push, which Claude Code's auto mode blocked that day.
+- In Git Bash, `git show origin/main:PATH` needs `MSYS_NO_PATHCONV=1`, and with it set, git takes Windows paths, such as `C:/...`.
+- The lab keeps a working copy of `merced_sr99_lexo_ifc43_preliminary.ifc`, the lab draft, in its Lexocad_lab folder. The draft has the same content as main's file, with CRLF line endings where git stores LF. Make an edit to the file in both.
+
 ## Reading the lab skills
 
 The user's profile says to read the lab's skills from the repository `workforce-lab/cife-research-method-skills` before the work. List a skill's folder through the GitHub connection, then download its `SKILL.md` from the `download_url` in the listing at once with `curl -sS -o NAME.md "DOWNLOAD_URL"`. The token in a `download_url` expires after a few minutes, so a download from an old link returns "404: Not Found". The file `.claude/settings.json` allows that `curl` command, so the permission checker does not block it. If the download is blocked, fetch the file through the GitHub connection, which returns it as Base64, and decode it with `base64 -d`.
