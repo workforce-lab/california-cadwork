@@ -1,11 +1,11 @@
 ---
 name: ifc-layer-structure-type
-description: "How elements are turned off in the cadwork BIM Viewer through its three panels of lights, IFC Structure, IFC Type and IFC Layer, and what to tell a user whose IFC Layer lights do nothing. Use this skill whenever the user says the layer lights or lamps in the cadwork BIM Viewer do not turn elements off, asks whether that is a bug, or calls a file broken or corrupted because of it; whenever the user wants to turn elements on or off in the viewer; whenever an IFC 4.3 file is made or changed for the viewer, such as a Civil 3D or Lexocad export; before changing a file's spatial structure, classes or layers for the viewer; and whenever an IFC file is to go into Lexocad and back out, imported, edited and exported again. Use it even when the user does not name the panels."
+description: "How elements are turned off in the cadwork BIM Viewer through its three panels of lights, IFC Structure, IFC Type and IFC Layer, and what to tell a user whose IFC Layer lights do nothing. Use this skill whenever the user says the layer lights or lamps in the cadwork BIM Viewer do not turn elements off, asks whether that is a bug, or calls a file broken or corrupted because of it; whenever the user wants to turn elements on or off in the viewer; whenever an IFC 4.3 file is made or changed for the viewer, such as a Civil 3D or Lexocad export; before changing a file's spatial structure, classes or layers for the viewer; and whenever an IFC file is to be opened in Lexocad, or to go into Lexocad and back out, imported, edited and exported again. Use it even when the user does not name the panels."
 ---
 
 # IFC Layer, IFC Structure and IFC Type in the cadwork BIM Viewer
 
-v0.4, 25 November 2026
+v0.5, 26 November 2026
 
 The cadwork BIM Viewer has three panels with a light beside each line: IFC Structure, IFC Layer and IFC Type. cadwork's manual calls the lights lamps. A light turns off the elements of its line.
 
@@ -62,6 +62,10 @@ The IFC has to make a round trip through Lexocad, or content cannot be added in 
 - Buildings and storeys made by script, with lx.Building, lx.BuildingStorey and storey.addElement, come out of Lexocad's IFC export with their elements, and a GlobalId set with setGlobalId comes out on its element. This was tested with an IFC4 export.
 - Lexocad's scripting exporter wrote IFC4 for setIfcVersion(4) and IFC2X3 for every other value tried: 5, 43, and 9, which is LxIfcModel.IFC4X3. An IFC 4.3 export goes through the export dialog in the Lexocad window.
 - A file rebuilt from a Lexocad export loses the work done after the export, and that work has to be done again: the IFC 4.3 classes with the MER99_Conversion property sets, the spatial structure, the SR 99 alignment (skill origin-point-ifc), the K-rail (skill k-rail), the tree ec.iv with the hawk Carls_hawks, and the deletion of the 99 square trees of the layer "2009 tree" in merced.lxz (pull request #16).
+
+## Opening an IFC file in Lexocad from the cadwork BIM Viewer
+
+To open an IFC file in Lexocad with its IFC structure, open the file in the cadwork BIM Viewer, and choose File > Start Lexocad ... in the viewer. On 26 November 2026 the instructor opened `merced_sr99_lexo_ifc43_preliminary.ifc` this way, and the IFC structure was preserved: Lexocad's IFC Structure panel listed the site, the buildings and their storeys, such as the building Hawk_Buffer with the storeys Bird, Hawk_zone and Tree. An import into a new document in the Lexocad window, in the section above, made one SuperBloc instead.
 
 ## How an agent got confused
 
