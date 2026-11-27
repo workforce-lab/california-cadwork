@@ -5,7 +5,7 @@ description: "What K-rail is, its dimensions, where it is used and how it behave
 
 # K-rail
 
-v0.3, 25 November 2026
+v0.4, 26 November 2026
 
 K-rail is the common name for Temporary Railing (Type K) of Caltrans, the California Department of Transportation: precast concrete sections of the New Jersey safety shape, joined end to end by a pin through steel loops. A temporary barrier drawn as a plain box, or a K-rail number given without its source, leaves the user a model and a number that cannot be checked. This skill gives each fact with its source, and the one way this repository models K-rail.
 
@@ -72,11 +72,19 @@ The script `scripts/lay_k_rail.py` does steps 1 to 5 and the steps of the next s
 
 Example: a line 100 m long takes 1 + round((100 - 6.045) / 6.096) = 16 sections. Their run is 15 * 6.096 + 6.045 = 97.49 m long, so each end of the line moves 1.26 m inward.
 
-Example from this repository, measured on 25 November 2026: `merced_sr99_lexo_ifc43_preliminary.ifc` holds four elements named "barrier type K", in two lines. In each line a box 10.56 m long meets a curved run end to end, with a gap of 0.09 m between them. One line is 636.98 m long and takes 104 sections, one in the box #125987 and 103 in the run #92822; each of its ends moves 1.524 m, the most that step 2 allows. The other is 610.42 m long and takes 100 sections, 2 in #287948 and 98 in #288181. The edit replaced 4 lines and added 1,262.
+Example from this repository, measured on 25 November 2026: `merced_sr99_lexo_ifc43_preliminary.ifc`, the file that `merced_sr99_lexo_ifc43_preliminary_r2.ifc` replaced, held four elements named "barrier type K", in two lines. In each line a box 10.56 m long meets a curved run end to end, with a gap of 0.09 m between them. One line is 636.98 m long and takes 104 sections, one in the box #125987 and 103 in the run #92822; each of its ends moves 1.524 m, the most that step 2 allows. The other is 610.42 m long and takes 100 sections, 2 in #287948 and 98 in #288181. The edit replaced 4 lines and added 1,262.
 
-## The K-rail in merced_sr99_lexo_ifc43_preliminary.ifc
+## The K-rail in merced_sr99_lexo_ifc43_preliminary_r2.ifc
 
-Facts measured on 25 November 2026:
+`merced_sr99_lexo_ifc43_preliminary_r2.ifc` replaced `merced_sr99_lexo_ifc43_preliminary.ifc` on 26 November 2026, after a round trip through Lexocad (skill ifc-layer-structure-type). Facts measured that day in r2:
+
+- The round trip kept all 204 sections, each at its place, and the four elements kept their GlobalIds, so r2 needs no new K-rail. The elements are #300068 (103 sections), #303081 (98), #305944 (2) and #306023 (1), which were #92822, #288181, #287948 and #125987 in the file r2 replaced.
+- Three bodies are still mapped representations. The body of #306023, a single section, became one IfcExtrudedAreaSolid.
+- The IfcWallType K-rail still types the four elements, but it holds neither its property set nor its representation map. Each element carries the facts in the property set lx_K-rail instead.
+- The four elements are in building "Mainline SR 99", storey "Traffic control".
+- The elements that lie over the K-rail's top, named in the facts below, are now in other storeys: G16-02, G03-04, G11-03 and G13-01 in storey "Mainline SR 99 2026"; G39-01 and G40-01 in building "Embankment 2026", storeys "Southbound" and "Northbound"; and G03-16 in building "Bridge_2026", storey "Median" under storey "Falsework".
+
+Facts measured on 25 November 2026 in `merced_sr99_lexo_ifc43_preliminary.ifc`, the file that r2 replaced:
 
 - The K-rail was laid with `python -I scripts/lay_k_rail.py merced_sr99_lexo_ifc43_preliminary.ifc --line 125987,92822 --line 287948,288181`, in pull request #15. A file rebuilt from a new Lexocad export needs the K-rail again: check that the four numbers still name the four elements "barrier type K", then run the same command.
 - The 204 sections have no colour. The name "barrier type K test edit", which pull request #11 gave one element as a test, is gone.

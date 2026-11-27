@@ -5,7 +5,7 @@ description: "How elements are turned off in the cadwork BIM Viewer through its 
 
 # IFC Layer, IFC Structure and IFC Type in the cadwork BIM Viewer
 
-v0.5, 26 November 2026
+v0.6, 26 November 2026
 
 The cadwork BIM Viewer has three panels with a light beside each line: IFC Structure, IFC Layer and IFC Type. cadwork's manual calls the lights lamps. A light turns off the elements of its line.
 
@@ -66,6 +66,19 @@ The IFC has to make a round trip through Lexocad, or content cannot be added in 
 ## Opening an IFC file in Lexocad from the cadwork BIM Viewer
 
 To open an IFC file in Lexocad with its IFC structure, open the file in the cadwork BIM Viewer, and choose File > Start Lexocad ... in the viewer. On 26 November 2026 the instructor opened `merced_sr99_lexo_ifc43_preliminary.ifc` this way, and the IFC structure was preserved: Lexocad's IFC Structure panel listed the site, the buildings and their storeys, such as the building Hawk_Buffer with the storeys Bird, Hawk_zone and Tree. An import into a new document in the Lexocad window, in the section above, made one SuperBloc instead.
+
+## The round trip of 26 November 2026
+
+The instructor then exported that Lexocad document from Lexocad 31.0.50081 as an IFC 4.3 file, `merced_sr99_lexo_ifc43_preliminary_r2.ifc`. On the same day r2 replaced `merced_sr99_lexo_ifc43_preliminary.ifc` in this repository (pull requests #19, #20 and #21). Facts measured against the file it replaced:
+
+- Every element kept its GlobalId and its IFC class, except one element named merced.ivx, which went from IfcGeographicElement to IfcBuildingElementProxy. Lexocad wrote new type objects, with new GlobalIds.
+- The export wrote the spatial structure that the Lexocad document held, 17 buildings with 57 storeys, and an empty site and building named Layer 2d.
+- The export kept every property set of the elements and renamed it with the prefix lx_, such as lx_MER99_Conversion, lx_Pset_Stationing and lx_K-rail. Lexocad added its own sets: Pset_Stationing, Pset_WallCommon and the other common sets, Qto_ sets and Cadwork_Common.
+- The values came through with three changes: the property Status became Status~1; LexocadBuilding, LexocadStorey, LexocadType, ReviewGroup and Status~1 became IfcPropertyEnumeratedValue; and the double quotes in 61 values of Question became spaces. Lexocad's own Pset_Stationing gives Station 0 for all 119 referents, so read the stations from lx_Pset_Stationing.
+- The 355 elements with faceted geometry kept their place within 1 mm, and their shell-based surface models became IfcPolygonalFaceSet. The 204 K-rail sections kept their place (skill k-rail). The other elements with extruded or mapped geometry were not compared.
+- The export added an IfcMapConversion, with eastings -1,998,633.203 and northings -589,448.288, and an IfcProjectedCRS with no name (skill origin-point-ifc). The file it replaced had none.
+- The colours came through as the Lexocad document held them: 138 elements are bright magenta, where the file it replaced had 288.
+- The 25 elements of the file it replaced that are not in r2 were not in the Lexocad document either.
 
 ## How an agent got confused
 

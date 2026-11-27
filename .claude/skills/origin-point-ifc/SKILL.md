@@ -1,11 +1,11 @@
 ---
 name: origin-point-ifc
-description: "How to read and report an IFC file's origin point and elevations against sea level, and how the contract plans' ROUTE99 stations tie into the frame of merced_sr99_lexo_ifc43_preliminary.ifc. Use this skill whenever an agent reads, reports, compares or edits z values, elevations or coordinates in an IFC file, such as merced_sr99_c3d_ifc43_do_not_use.ifc in this repository; whenever an agent places an element by a station and offset from the contract plans; whenever the user asks where a file's origin point is, how high a place is above sea level, or why a model's elevations differ from the plans or from a published elevation; and whenever a model comes from Civil 3D. Use it even when the user does not say 'origin point'."
+description: "How to read and report an IFC file's origin point and elevations against sea level, and how the contract plans' ROUTE99 stations tie into the frame of merced_sr99_lexo_ifc43_preliminary_r2.ifc. Use this skill whenever an agent reads, reports, compares or edits z values, elevations or coordinates in an IFC file, such as merced_sr99_c3d_ifc43_do_not_use.ifc in this repository; whenever an agent places an element by a station and offset from the contract plans; whenever the user asks where a file's origin point is, how high a place is above sea level, or why a model's elevations differ from the plans or from a published elevation; and whenever a model comes from Civil 3D. Use it even when the user does not say 'origin point'."
 ---
 
 # Origin point of an IFC file
 
-v0.5, 25 November 2026
+v0.6, 26 November 2026
 
 An agent that mixes up a file's origin point with a site's elevation gives answers that sound exact and are wrong by tens of meters. This skill keeps the two apart.
 
@@ -33,7 +33,9 @@ A modeler can build a model near the origin instead of at its true elevation, an
 - On 24 November 2026 the site was raised by the file's vertical offset from the contract plans, 47.96 m (157.35 ft), so a z value read in the model is a plans elevation. The terrain now runs from about 159 to 177 ft (48 to 54 m). The geometry's own coordinates are still the Civil 3D values; only the site moved.
 - Merced stands about 52 m (171 ft) above sea level (GeoNames; TopoZone, from the USGS Merced topographic map). The offset of 47.96 m is close to that 52 m because Civil 3D built the model on the origin point.
 
-## merced_sr99_lexo_ifc43_preliminary.ifc and the plans' ROUTE99 line
+## merced_sr99_lexo_ifc43_preliminary_r2.ifc and the plans' ROUTE99 line
+
+`merced_sr99_lexo_ifc43_preliminary_r2.ifc` replaced `merced_sr99_lexo_ifc43_preliminary.ifc` on 26 November 2026, after a round trip through Lexocad (skill ifc-layer-structure-type). The facts below were found in the file it replaced, and they hold for r2: r2 keeps the same frame, with its 355 elements of faceted geometry within 1 mm of the earlier file, and it holds the same three IfcAlignment and 119 IfcReferent in the same building and storeys. In r2 the stations are in the property set lx_Pset_Stationing; Lexocad's own Pset_Stationing gives Station 0. r2 also carries an IfcMapConversion, with eastings -1,998,633.203, northings -589,448.288 and orthogonal height 0, and an IfcProjectedCRS with no name; the earlier file had none.
 
 Facts found on 25 November 2026, for placing elements by station in the Lexocad file:
 
