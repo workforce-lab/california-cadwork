@@ -8,7 +8,9 @@ A change reaches the main branch this way. The user logs the agent in to GitHub.
 
 The `*.ifc` files in this repository are large text files, and they will change. The login through MCP carries small files only, so a large `*.ifc` file cannot go up through it whole. How an edit to an `*.ifc` file goes up is under test. Two facts are measured on a test file: git merges two edits to different single lines of the file by itself, and a save of the file through the software library ifcopenshell, with no edit, changes every line of the file.
 
-A third fact was measured on November 25, 2026, on `merced_sr99_lexo_ifc43_preliminary.ifc`, a 13.6 MB file. In Claude Code, an edit of one line with `sed`, pushed with `git push`, went up as a diff of one line (1 insertion, 1 deletion). The pack that git builds for that push measures 984 bytes, not the 13.6 MB of the file.
+A third fact was measured on November 25, 2026, on `merced_sr99_lexo_ifc43_preliminary.ifc`, then a 13.6 MB file, which `merced_sr99_lexo_ifc43_preliminary_r2.ifc` replaced on November 26, 2026. In Claude Code, an edit of one line with `sed`, pushed with `git push`, went up as a diff of one line (1 insertion, 1 deletion). The pack that git builds for that push measures 984 bytes, not the 13.6 MB of the file.
+
+A file over 25 MB cannot go up through GitHub's web upload (the instructor, November 26, 2026). `merced_sr99_lexo_ifc43_preliminary_r2.ifc`, 30.7 MB, went up through git that day, in pull request #19.
 
 ### Give the agent access before the work
 
@@ -37,11 +39,11 @@ A chat reaches this repository only through the GitHub connection. The chat's co
 
 An `*.ifc` file is too large for that path:
 
-- `merced_sr99_lexo_ifc43_preliminary.ifc` holds 13,603,032 characters. At about 2.5 characters to a token, that is about 5.4 million tokens. The connection carries a file as Base64, which is a third longer, so about 7.3 million tokens. The largest context window of a Claude model in a chat is 1 million tokens.
+- `merced_sr99_lexo_ifc43_preliminary_r2.ifc` holds 30,332,724 characters. At about 2.5 characters to a token, that is about 12.1 million tokens. The connection carries a file as Base64, which is a third longer, so about 16.2 million tokens. The largest context window of a Claude model in a chat is 1 million tokens.
 - A tool result has its own limit, far below the context window. A tool result of 60,782 characters, three skill files from the lab's skills repository in Base64, was too large for one result in Claude Code on November 25, 2026.
-- GitHub's REST API, in the endpoint "Get repository contents," returns the content of a file of up to 1 MB. A file between 1 MB and 100 MB comes back without its content unless it is asked for in the raw format. The three `*.ifc` files here are 1.1 MB, 13.6 MB and 49.1 MB.
+- GitHub's REST API, in the endpoint "Get repository contents," returns the content of a file of up to 1 MB. A file between 1 MB and 100 MB comes back without its content unless it is asked for in the raw format. The three `*.ifc` files here are 1.1 MB, 30.3 MB and 49.1 MB.
 
-Claude Code works on a clone of the repository instead. It reads and edits the file on disk with `grep` and `sed`, so only the lines it reads enter its context. git then sends only the change: the push of a one-line edit to the 13.6 MB file measures 984 bytes.
+Claude Code works on a clone of the repository instead. It reads and edits the file on disk with `grep` and `sed`, so only the lines it reads enter its context. git then sends only the change: the push of a one-line edit to a 13.6 MB file measured 984 bytes.
 
 ## How to edit one line of an `*.ifc` file
 
@@ -53,11 +55,12 @@ Claude Code works on a clone of the repository instead. It reads and edits the f
 
 ## Pushing and merging with the GitHub CLI
 
-- On a computer where git's credential manager holds another GitHub account than the GitHub CLI, gh, push through gh's login: `git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin HEAD:refs/heads/BRANCH`. Run it first with `--dry-run`. Pull requests #15 and #16 went up this way.
+- On a computer where git's credential manager holds another GitHub account than the GitHub CLI, gh, push through gh's login: `git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin HEAD:refs/heads/BRANCH`. Run it first with `--dry-run`. Pull requests #15, #16 and #18 to #22 went up this way.
 - Open the pull request with `gh pr create --repo workforce-lab/california-cadwork --head BRANCH`.
-- Pull requests #3, #15 and #16 were squash-merged, #3 and #15 with `gh pr merge NUMBER --squash`. Fetch main just before a merge, because main can move while a pull request is open: on 24 November 2026 a pull request conflicted until main was merged into its branch. Merge main into the branch rather than rebase it, because a rebase needs a force push, which Claude Code's auto mode blocked that day.
+- Pull requests #3, #15, #16 and #18 to #22 were squash-merged, #3, #15 and #20 to #22 with `gh pr merge NUMBER --squash`. Fetch main just before a merge, because main can move while a pull request is open: on 24 November 2026 a pull request conflicted until main was merged into its branch. Merge main into the branch rather than rebase it, because a rebase needs a force push, which Claude Code's auto mode blocked that day.
 - In Git Bash, `git show origin/main:PATH` needs `MSYS_NO_PATHCONV=1`, and with it set, git takes Windows paths, such as `C:/...`.
-- The lab keeps a working copy of `merced_sr99_lexo_ifc43_preliminary.ifc`, the lab draft, in its Lexocad_lab folder. The draft has the same content as main's file, with CRLF line endings where git stores LF. Make an edit to the file in both.
+- GitHub deletes a pull request's branch when the pull request is merged, and a later push to that branch name makes a new branch with no pull request. On November 26, 2026 an agent pushed to the branch of pull request #19 after the instructor had merged it. Check the pull request's state with `gh pr view NUMBER` before pushing to its branch, and start each new change on a new branch from main.
+- The lab keeps a working copy of `merced_sr99_lexo_ifc43_preliminary_r2.ifc`, the lab draft, in its Lexocad_lab folder, in the subfolder roundtriptest. The draft has the same content as main's file, with CRLF line endings where git stores LF. Make an edit to the file in both.
 
 ## Reading the lab skills
 
